@@ -1,7 +1,7 @@
 const fs = require('fs');
 var arr = [];
 var totalScore = 0;
-fs.readFile('./input.txt', 'utf-8', (err, data) => {
+fs.readFile(__dirname + '/input.txt', 'utf-8', (err, data) => {
     if (err) throw err;
     arr = data.split(/\r?\n/);
     
