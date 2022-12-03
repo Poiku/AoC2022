@@ -66,3 +66,4 @@ return;
 
 /* Notes
 Use string.includes() instead
+*/
