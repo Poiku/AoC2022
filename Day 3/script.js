@@ -34,9 +34,8 @@ console.log("Part 1 answer: " + p1total);
 
 /* Part 2 */
 let p2total = 0;
-let foundMatch = false;
 for(let i = 0; i < inputArray.length; i+=3){
-  foundMatch = false;
+  let foundMatch = false;
     for(let j = 0; j < inputArray[i].length; j++){
       for(let k = 0; k < inputArray[i+1].length; k++){
         if(inputArray[i][j] === inputArray[i+1][k] && !foundMatch){
@@ -64,3 +63,6 @@ if(val <= 122 && val >= 97){
 }
 return;
 }
+
+/* Notes
+Use string.includes() instead
