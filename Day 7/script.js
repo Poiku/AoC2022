@@ -9,6 +9,7 @@ let directories = [];
 let directSize = 0;
 let containedDirs = [];
 let dirCounter = 1;
+let readingData = false;
 consoleOutput.forEach(line => {
     if(line.startsWith("$")){
         if(line.startsWith("$ cd")){
@@ -62,4 +63,10 @@ counter räknar hur många dirs i mappen,
 /*
 Få directory tree
 I slutet addera storleken på mapparna i en mapp för att få full storlek med indirekta filer
+*/
+
+/*
+Få en array med objects som innehåller varje mapp (gjort, en bugg bara när man ska veta att man ska pusha innehållet till arrayen)
+Få sedan på något sätt storleken på alla contained directories i varje objekt
+Du har nu summan av storleken i varje directory
 */
