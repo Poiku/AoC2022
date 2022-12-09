@@ -67,8 +67,8 @@ function GetTotalSize(directoryPath){
 directories.map(element =>{
     if(!element.ContainedDirs.length == 0){
         element.DirectSize = GetTotalSize(element.DirectoryPath);
-        element.FullSize = true;
     }
+    element.FullSize = true;
 });
 
 let pOneAns = 0;
@@ -79,7 +79,6 @@ directories.forEach(element =>{
 });
 console.log("Part 1 answer: " + pOneAns);
 
-console.log(directories);
 const TOTAL_DISKSPACE = 70000000;
 const REQUIRED_DISKSPACE = 30000000;
 const AVAILABLE_DISKSPACE = TOTAL_DISKSPACE - directories[0].DirectSize; // fel storlek
