@@ -1,13 +1,13 @@
 const fs = require('fs');
 
 let consoleOutput = fs.readFileSync(__dirname + '/input.txt', 'utf-8').split(/\r\n|\r|\n/);
-let currentDirPath = "/";
 
-let currentIndex = 0;
 let directories = [];
 
+let currentDirPath = "/";
 let directSize = 0;
 let containedDirs = [];
+
 let readingData = false;
 consoleOutput.forEach((line, index) => {
     if(line.startsWith("$") || index == consoleOutput.length){
@@ -21,7 +21,6 @@ consoleOutput.forEach((line, index) => {
             directories.push(directory);
             directSize = 0;
             containedDirs = [];
-            currentIndex++;
             readingData = false;
         }
         if(line.startsWith("$ cd")){
@@ -30,7 +29,7 @@ consoleOutput.forEach((line, index) => {
                 currentDirPath = "/";
             }
             else if (changeDirBy === ".."){
-                currentDirPath = currentDirPath.slice(2);
+                currentDirPath = currentDirPath.slice(2); //Måste kunna skära av dirs längre en en karaktär
             }
             else{
                 currentDirPath += changeDirBy + "/";
