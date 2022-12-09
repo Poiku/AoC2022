@@ -1,17 +1,29 @@
 const fs = require('fs');
 
-let consoleOutput = fs.readFileSync(__dirname + '/testinput.txt', 'utf-8').split(/\r\n|\r|\n/);
+let consoleOutput = fs.readFileSync(__dirname + '/input.txt', 'utf-8').split(/\r\n|\r|\n/);
 let currentDirPath = "/";
 
-let currentIndex = -1;
+let currentIndex = 0;
 let directories = [];
 
 let directSize = 0;
 let containedDirs = [];
-let dirCounter = 1;
 let readingData = false;
-consoleOutput.forEach(line => {
-    if(line.startsWith("$")){
+consoleOutput.forEach((line, index) => {
+    if(line.startsWith("$") || index == consoleOutput.length){
+        if(readingData){
+            let directory = {
+                DirectoryPath : currentDirPath,
+                DirectSize : directSize,
+                ContainedDirs : containedDirs,
+                FullSize : false
+            }
+            directories.push(directory);
+            directSize = 0;
+            containedDirs = [];
+            currentIndex++;
+            readingData = false;
+        }
         if(line.startsWith("$ cd")){
             let changeDirBy = line.slice(5, line.length);
             if(changeDirBy === "/"){
@@ -25,37 +37,68 @@ consoleOutput.forEach(line => {
             }
         }
         else if(line === "$ ls"){
-            let directory = {
-                DirectoryPath : currentDirPath,
-                DirectSize : directSize,
-                ContainedDirs : containedDirs
-            }
-            directories.push(directory);
-            directSize = 0;
-            containedDirs = [];
-            currentIndex++;
+            readingData = true;
         }
     }
     else if(line.startsWith("dir")){
-        containedDirs.push(currentDirPath + line.slice(4, line.length));
+        containedDirs.push(currentDirPath + line.slice(4, line.length) + "/");
     }
     else{
-        directSize = +line.slice(0, line.indexOf(" "));
+        directSize += +line.slice(0, line.indexOf(" "));
     }
 
 });
 
-function GetDirectSize(line){
-    if(line.startsWith("dir")){
+function GetTotalSize(directoryPath){
+    let currSize = 0;
+    directories.forEach(element => {
+            if(element.DirectoryPath == directoryPath){
+                currSize = element.DirectSize;
+                if(!element.ContainedDirs.length == 0){
+                    element.ContainedDirs.forEach(element =>{
+                        currSize += GetTotalSize(element);
+                    });
+                }    
+            }
+    }); 
+    return currSize;
+    }  
 
+directories.map(element =>{
+    if(!element.ContainedDirs.length == 0){
+        element.DirectSize = GetTotalSize(element.DirectoryPath);
+        element.FullSize = true;
     }
-    else{
-        return +line.slice(0, line.indexOf(" "));
+});
+
+let pOneAns = 0;
+directories.forEach(element =>{
+    if(element.DirectSize <= 100000){
+        pOneAns += element.DirectSize;
     }
-}
+});
+console.log("Part 1 answer: " + pOneAns);
 
 console.log(directories);
+const TOTAL_DISKSPACE = 70000000;
+const REQUIRED_DISKSPACE = 30000000;
+const AVAILABLE_DISKSPACE = TOTAL_DISKSPACE - directories[0].DirectSize; // fel storlek
+let potentialDirs = [];
+directories.forEach(element =>{
+    if(AVAILABLE_DISKSPACE + element.DirectSize >= REQUIRED_DISKSPACE){
+        potentialDirs.push(element.DirectSize);
+    }
+});
+const min = Math.min(...potentialDirs);
+console.log("Part 2 answer: " + min);
+
+
+//console.log(GetIndirectSize("/a/"));
+
 let a = 0;
+/*
+Loopa alla i arrayen, ifall den har contained dirs loopa samma array, ifall den har samma directory path som dess contained dir så calla funktionen igen
+*/
 /*
 Currentdirindex + counter
 counter räknar hur många dirs i mappen,
